@@ -13,29 +13,27 @@ let url = "http://www.domain.com/?user=jack&id=123&id=456&city=%E5%8C%97%E4%BA%A
 //   enabled: true, // 未指定值得 key 约定为 false
 // }
 
-function parseParam(url: string) {
-  const paramsArr = url.slice(url.indexOf("?") + 1).split("&");
-  const map = new Map();
-  return reverseToRes(paramsArr, map);
-}
-function reverseToRes(strArr: string[], map: any) {
-  const res = {};
-  strArr.forEach((item) => {
-    const [key, value] = item.split("=");
-    // 判断key是否单次出现
-    if (map.get(key) !== undefined) {
-      res[key] = [map.get(key), reverse(value)];
-    } else {
-      res[key] = reverse(value);
-    }
-    map.set(key, value);
-  });
-  return res;
-}
-function reverse(value: string) {
-  return (`${parseInt(value)}` === value ? parseInt(value) : value) ?? false;
-}
-parseParam(url);
+   function parseParam(url) {
+            const paramsArr = url.slice(url.indexOf("?") + 1).split("&");
+            const res = {};
+            paramsArr.forEach((item) => {
+                let [key, value] = item.split("=");
+
+                if (value) {
+                    value = decodeURIComponent(value);
+                    value = `${parseInt(value)}` == value ? parseInt(value) : value
+                    if (res.hasOwnProperty(key)) {
+                        res[key] = [res[key], value];
+                    } else {
+                        res[key] = value;
+                    }
+                } else {
+                    res[key] = false
+                }
+                // 判断key是否单次出现
+            });
+            return res;
+        }
 ```
 
 ## format时间

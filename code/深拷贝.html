@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 第一种 JSON.parse(JSON.Stringfy())
+
+        // 第二种  递归
+        function clone(target, map = new Map()) {
+            if (typeof target === 'object') {
+                let cloneTarget = target instanceof Array ? [] : {};
+                if (map.get(target)) {
+                    return map.get(target);
+                }
+                // 这里的cloneTarget是引用数据类型
+                map.set(target, cloneTarget);
+                for (const key in target) {
+                    cloneTarget[key] = clone(target[key], map);
+                }
+                return cloneTarget;
+            } else {
+                return target;
+            }
+        };
+
+
+        //测试
+        const obj = {
+            name: 'Jack',
+            address: {
+                x: 100,
+                y: 200
+            },
+            a: [1, 2, 3, 4],
+            b: Symbol('22')
+        }
+        obj.obj = obj //循环引用，会一直嵌套
+        const newObj = clone(obj)
+        console.log('obj', obj)
+        console.log('newObj', newObj)
+    </script>
+</body>
+
+</html>
