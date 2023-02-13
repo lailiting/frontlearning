@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="b">3435r34</div>
+</body>
+<script>
+    let b = document.getElementById("b")
+    b.addEventListener("click",()=>{
+        console.log("点击")
+        new Promise(() => {
+            console.log("332")
+            resolve()
+        }).then(() => {
+            console.log("334")
+        })
+    })
+    async function async1() {
+        console.log('async1 start');
+        await async2();
+    };
+
+    async function async2() {
+        console.log('async2');
+    }
+
+    console.log('script start');
+
+    setTimeout(function () {
+        console.log('setTimeout');
+    }, 0);
+
+    async1();
+
+    new Promise(function (resolve) {
+        console.log('promise1');
+        resolve();
+    }).then(function () {
+        console.log('promise2');
+    });
+
+    console.log('script end2');
+
+    // script start，async1 start，async2， promise1，script end2，promise2， setTimeout
+</script>
+
+</html>
