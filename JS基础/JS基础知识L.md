@@ -272,25 +272,153 @@ settimeout
 
 ## 性能优化
 
+
+
 ## $nextick
 
 ## 数组转树形结构
 
 ## 扁平化数组
 
+```js
+function fallten(arr) {
+        let result = []
+        for (let item of arr) {
+            if (Array.isArray(item)) {
+                result = result.concat(fallten(item))
+            } else {
+                result.push(item)
+            }
+        }
+        return result
+    }
+
+    // reduce
+    function rflatten(arr){
+        return arr.reduce((pre,cur) => {
+            return pre.concat(Array.isArray(cur) ? rflatten(cur) : cur)
+        },[])
+    }
+
+    // flat
+    function fflatten(arr){
+        return arr.flat(Infinity)
+    }
+
+    // tostring
+    function sflatten(arr){
+        return arr.toString().split(",").map(i => Number(i))
+    }
+
+    // 正则表达式
+    function zflatten(arr){
+        let str = JSON.stringify(arr)
+        str = str.replace(/(\[|\])/g,"")
+        str = "[" + str + "]"
+        return JSON.parse(str)
+
+    }
+
+    // 拓展运算符不理解
+    function tflatten(arr) {
+        while (arr.some(i => {
+                return Array.isArray(i)
+            })) {
+            console.log(arr,...arr)
+            arr = [].concat(...arr);
+        }
+        return arr;
+    }
+```
+
+
+
 ## 数组方法
+
+- **`at()`** 方法接收一个整数值并返回该索引对应的元素，允许正数和负数。负整数从数组中的最后一个元素开始倒数。
+
+- **`concat()`** 方法用于合并两个或多个数组。此方法不会更改现有数组，而是返回一个新数组。
+
+- **`entries()`** 方法返回一个新的**数组迭代器**对象，该对象包含数组中每个索引的键/值对。
+
+- **`every()`** 方法测试一个数组内的所有元素是否都能通过某个指定函数的测试。它返回一个布尔值。
+
+- **`some()`** 方法测试数组中是不是至少有 1 个元素通过了被提供的函数测试。它返回的是一个 Boolean 类型的值。
+
+- **`fill()`** 方法用一个固定值填充一个数组中从起始索引到终止索引内的全部元素。不包括终止索引。fill(value, start, end)
+
+- **`filter()`** 方法创建给定数组一部分的[浅拷贝](https://developer.mozilla.org/zh-CN/docs/Glossary/Shallow_copy)，其包含通过所提供函数实现的测试的所有元素。
+
+- **`find()`** 方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 [`undefined`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/undefined)。
+
+- **`findIndex()`**方法返回数组中满足提供的测试函数的第一个元素索引。若没有找到对应元素则返回 -1。
+
+- **`findLast()`** 方法返回数组中满足提供的测试函数条件的最后一个元素的值。如果没有找到对应元素，则返回 [`undefined`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/undefined)。
+
+- **`findLastIndex()`** 方法返回数组中满足提供的测试函数条件的最后一个元素的索引。若没有找到对应元素，则返回 -1。
+
+- **`flat()`** 方法会按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新数组返回。
+
+- **`flatMap()`** 方法首先使用映射函数映射每个元素，然后将结果压缩成一个新数组。它与 [map](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/map) 连着深度值为 1 的 [flat](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/flat) 几乎相同，但 `flatMap` 通常在合并成一种方法的效率稍微高一些。
+
+- **`forEach()`** 方法对数组的每个元素执行一次给定的函数。forEach((element, index, array) => { /* … */ })
+
+- **`Array.from()`** 方法对一个类似数组或可迭代对象创建一个新的，浅拷贝的数组实例。
+
+- **`include（）`** 方法确定数组是否 在其条目中包含一定的值，返回或酌情返回。`true``false`
+
+- **`indexOf（）`** 方法返回第一个索引，其中 给定元素可以在数组中找到，如果不存在，则为 -1。indexOf(searchElement, fromIndex)
+
+- **`Array.isArray（）`** 静态方法确定传递的值是否为 [`Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)。
+
+- **`join（）`** 方法创建并 通过连接数组中的所有元素返回新字符串 （或[类似数组的对象](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections#working_with_array-like_objects)）， 用逗号或指定的分隔符字符串分隔。如果阵列有 只有一个项目，那么该项目将在不使用分隔符的情况下返回。
+
+- **`keys（）`** 方法返回一个新的**数组 包含**数组中每个索引的键的迭代器对象。
+
+- **`lastIndexOf（）`** 方法返回最后一个索引，其中 给定的元素可以在数组中找到，如果不存在，则为 -1。该数组是 向后搜索，从 开始。`fromIndex`
+
+- **`map（）`** 方法**创建 填充**了调用所提供函数的结果的新数组 调用数组中的每个元素。
+
+- **`pop（）`** 方法从数组中删除**最后一个**元素并返回该元素。此方法更改 数组。
+
+- **`push（）`** 方法将一个或多个元素添加到 一个数组并返回数组的新长度。
+
+- **`reduce（）`** 方法按顺序对数组的每个元素执行用户提供的“reducer”回调函数，传入前一个元素计算的返回值。 跨数组的所有元素运行化简器的最终结果是单个值。
+
+  第一次运行回调时，没有“上一次计算的返回值”。 如果提供，可以使用初始值代替它。 否则，索引 0 处的数组元素用作初始值，迭代从下一个元素（索引 1 而不是索引 0）开始。
+
+  也许最容易理解的情况是返回数组中所有元素的总和：`reduce()`
+
+- **`reverse（）`** 方法就*[地](https://en.wikipedia.org/wiki/In-place_algorithm)*反转数组并返回对同一数组的引用，第一个数组元素现在成为最后一个数组元素，最后一个数组元素成为第一个数组元素。换句话说，数组中的元素顺序将转向与前面所述的相反的方向。
+
+- **`shift（）`** 方法从数组中删除**第一个**元素并返回已删除的元素。此方法更改长度 的数组。
+
+- **`slice（）`** 方法返回一部分的[浅拷贝](https://developer.mozilla.org/en-US/docs/Glossary/Shallow_copy) 将数组转换为从中选择的新数组对象 到 （不包括） 其中 和 表示 该数组中项的索引。不会修改原始数组。`start``end``end``start``end`
+
+- **`sort（）`** 方法就*[地](https://en.wikipedia.org/wiki/In-place_algorithm)*对数组的元素进行排序，并返回对同一数组的引用，现在已排序
+
+- **`splice（）`** 方法通过以下方式更改数组的内容 删除或替换现有元素和/或[添加新元素。splice(start, deleteCount, item1, item2, itemN)
+
+- **`toString（）`** 方法返回一个字符串，表示 指定的数组及其元素。
+
+- **`unshift（）`** 方法将一个或多个元素添加到 数组的开头，并返回数组的新长度。
+
+- **`values（）`** 方法返回一个新的数组迭代器对象，该对象*[迭代](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterator_protocol)数组*中每个项的值。
+
+
 
 ## 事件循环机制
 
 点击事件的执行顺序
 
-JS分为执行栈和任务队列，而任务分为宏任务和微任务，事件循环就是先把同步的任务推的执行栈中先执行完，等执行栈清空之后，去检索微任务中是否有任务，如果有则一次性把微任务执行完，如果执行微任务中途有其他微任务加进来，也会一并执行，微任务执行完之后，去查看宏任务是否到了时间或者说是否触发，如果是则执行这个宏任务，这个宏任务执行完之后要查看是否有微任务，如果有一次性执行完，然后继续看宏任务，不断循环，这个机制就叫做事件循环机制。
+JS分为执行栈和任务队列，而任务分为宏任务和微任务，事件循环就是先检查宏任务是否为空，如果不为空先把空任务的同步任务执行完如何去检索微任务中是否有任务，因为script代码块属于宏任务，所以先执行第一个script代码块的同步任务，执行完检查到有微任务则一次性把微任务执行完，如果执行微任务中途有其他微任务加进来，也会一并执行，微任务执行完之后，去查看宏任务是否到了时间或者说是否触发，如果是则执行这个宏任务，这个宏任务执行完之后要查看是否有微任务，如果有一次性执行完，然后继续看宏任务，不断循环，这个机制就叫做事件循环机制。
 
 微任务
 
-- promise.then
+- promise.then.catch.finally
 - MutationObserver
 - async awiat
+- process.nextTick(Node环境)
 
 宏任务
 
@@ -299,4 +427,6 @@ JS分为执行栈和任务队列，而任务分为宏任务和微任务，事件
 - setImmedate
 - MessageChannel
 - postMessage
+- script
 
+## 保持前后端实时通信的方法

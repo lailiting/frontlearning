@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    function fallten(arr) {
+        let result = []
+        for (let item of arr) {
+            if (Array.isArray(item)) {
+                result = result.concat(fallten(item))
+            } else {
+                result.push(item)
+            }
+        }
+        return result
+    }
+
+    // reduce
+    function rflatten(arr) {
+        return arr.reduce((pre, cur) => {
+            return pre.concat(Array.isArray(cur) ? rflatten(cur) : cur)
+        }, [])
+    }
+
+    // flat
+    function fflatten(arr) {
+        return arr.flat(Infinity)
+    }
+
+    // tostring
+    function sflatten(arr) {
+        return arr.toString().split(",").map(i => Number(i))
+    }
+
+    // 正则表达式
+    function zflatten(arr) {
+        let str = JSON.stringify(arr)
+        str = str.replace(/(\[|\])/g, "")
+        str = "[" + str + "]"
+        return JSON.parse(str)
+
+    }
+    // 拓展运算符
+    function tflatten(arr) {
+        while (arr.some(i => {
+                return Array.isArray(i)
+            })) {
+            console.log(arr,...arr)
+            arr = [].concat(...arr);
+        }
+        return arr;
+    }
+    console.log(tflatten([1, [2, [3, 4, [5]]]]))
+</script>
+
+</html>
