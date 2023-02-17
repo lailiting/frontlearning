@@ -430,3 +430,21 @@ JS分为执行栈和任务队列，而任务分为宏任务和微任务，事件
 - script
 
 ## 保持前后端实时通信的方法
+
+## 调试
+
+打印输出:
+
+- console.log 普通打印
+- console.warn 打印警告
+- console.error 打印错误
+- console.time console.timeEnd 用于计算代码段的执行时间
+- console.dir 查看DOM节点的相关事件和属性
+- console.table 将数组或者类数组的对象打印成表格
+
+在浏览器的开发者工具中选择sources面板里面设置断点，刷新进行调试
+
+或者在vscode里面设置断点将终端设置成javascript debug模式，运行调试，vscode还可以设置条件断点
+
+DOM断点，在浏览器开发者工具里面的elements选择卡选择要断点的元素，可以选择break on 里面的子树修改，属性修改和节点移除三种断点。
+

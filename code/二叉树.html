@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    const binaryTree = {
+        val: 'a',
+        left: {
+            val: 'b',
+            left: {
+                val: 'd',
+                left: null,
+                right: null
+            },
+            right: {
+                val: 'e',
+                left: null,
+                right: null
+            }
+        },
+        right: {
+            val: 'c',
+            left: {
+                val: 'f',
+                left: null,
+                right: null
+            },
+            right: {
+                val: 'g',
+                left: null,
+                right: null
+            }
+        }
+    }
+    const pre_order = root => {
+        // 结点是空的，直接返回
+        if (!root) return;
+        console.log(root.val)
+        pre_order(root.left)
+        pre_order(root.right)
+    }
+
+    pre_order(binaryTree)
+
+    const in_order = root => {
+        // 结点是空的，直接返回
+        if (!root) return;
+        in_order(root.left)
+        console.log(root.val)
+        in_order(root.right)
+    }
+
+    in_order(binaryTree)
+
+    // d b e a f c g
+
+
+    const post_order = root => {
+        // 结点是空的，直接返回
+        if (!root) return;
+        post_order(root.left)
+        post_order(root.right)
+        console.log(root.val)
+    }
+
+    post_order(binaryTree)
+
+    // d e b f g c a
+
+
+    const nonrec_preorder = root => {
+        // 结点是空的，直接返回
+        if (!root) return;
+
+        const stack = [root];
+        while (stack.length) {
+            const node = stack.pop();
+            if (node.right) stack.push(node.right);
+            if (node.left) stack.push(node.left);
+            console.log(node.val)
+        }
+    }
+
+    nonrec_preorder(binaryTree)
+
+
+    const nonrec_inorder = root => {
+        // 结点是空的，直接返回
+        if (!root) return;
+
+        // 定义一个指针指向root
+        let p = root;
+        // 定义一个栈
+        const stack = [];
+
+        // 这里地方要|| p是因为不加的话，最开始它就不跑进来了
+        while (stack.length || p) {
+            // 只要p不为空，就一直去找左节点，压栈
+            while (p) {
+                stack.push(p)
+                p = p.left;
+            }
+            // 第一轮的这个时候已经找到最左边边的结点了，给它pop出来
+            const node = stack.pop();
+            console.log(node.val)
+            // 这个时候左结点和根结点都已经pop出来了，要去遍历右节点
+            p = node.right;
+        }
+    }
+
+    nonrec_inorder(binaryTree)
+
+    const nonrec_postorder = root => {
+        // 结点是空的，直接返回
+        if (!root) return;
+        // 这个是跟前序遍历的那个栈一样作用
+        const stack = [root];
+        // 这个是用来给最后结果反一下的
+        const out_stack = [];
+        while (stack.length) {
+            const node = stack.pop();
+            // 每次把这个pop出来的结果收集起来，放在输出结果的那个栈里
+            out_stack.push(node);
+            if (node.left) stack.push(node.left);
+            if (node.right) stack.push(node.right);
+        }
+        // 输出栈再pop打印一下就好啦
+        while (out_stack.length) {
+            const n = out_stack.pop();
+            console.log(n.val)
+        }
+    }
+
+    nonrec_postorder(binaryTree)
+</script>
+
+</html>
