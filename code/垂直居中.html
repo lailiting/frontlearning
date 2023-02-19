@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            height: 200px;
+            border: 1px solid #000;
+            position: relative;
+        }
+        .center{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+        .one{
+           
+            left: 50%;
+            margin-left: -50px;
+            top: 50%;
+            margin-top: -50px;
+        }
+        .two{
+
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .three{
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="center one"></div>
+    </div>
+    <div class="box">
+        <div class="center two"></div>
+    </div>
+    <div class="box">
+        <div class="center three"></div>
+    </div>
+</body>
+</html>
