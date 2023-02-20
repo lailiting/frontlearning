@@ -192,7 +192,9 @@ let dounbe = function(fn,dalay){
 
 ## bind apply call
 
-## typeof intanceof
+## 说一说JavaScript有几种方法判断变量的类型？
+
+typeof instanceof  constructor object.prototype.toString.call()
 
 ## 浅拷贝和深拷贝
 
@@ -258,17 +260,7 @@ document.getElementById("div").offsetTop // 元素的实际距离上边界的距
 
 ```
 
-## 闭包，使用场景
 
-闭包就算让开发者可以从内部函数访问外部函数的作用域
-
-settimeout
-
-回调
-
-函数防抖和节流
-
-封装对象的私有属性
 
 ## 性能优化
 
@@ -464,3 +456,40 @@ webSocket是独立的，创建在TCP上的协议，实现服务器和客户端�
 
 DOM断点，在浏览器开发者工具里面的elements选择卡选择要断点的元素，可以选择break on 里面的子树修改，属性修改和节点移除三种断点。
 
+## cookie sessionStorage localStorage
+
+(存储位置，写入方式，生命周期，请求时是否携带，数据共享，应用场景，存储大小)
+
+共同点:他们都是浏览器的本地存储，并且都遵循同源策略，不过sessionStorage必须是同一个页面。
+
+不同点：cookie是服务端写入的，而sessionStorage跟localStorage是由前端写入的，cookie的生命周期是后端定义的，而localstorage是写入后会一直存在浏览器中，除非手动清除，而sessionStrorage是会话存储，如果这个标签页关闭的话就会清除，cookie的存储为4KB比较小而另外两个有大概5M，cookie会在向后端发请求的时候自动携带cookie，另外两个不会，cookie适合用来存储sessionID和token,localstroage适合存储不易变动的数据，sessionStorage可以保持刷新前的一些数据。
+
+## 预编译
+
+## 作用域
+
+在es5里面只有全局作用域和函数作用域
+
+在es6里面引入了块级作用域
+
+## 闭包
+
+一般形式就是定义一个函数A，里面返回一个函数B，并且B访问了A的变量，A函数执行后这个变量闭包不会销毁，而且只有B函数可以访问到。
+
+应用场景
+
+单例模式
+
+模拟私有属性
+
+柯里化函数
+
+settimeout
+
+回调
+
+函数防抖和节流
+
+封装对象的私有属性
+
+会找出内存泄漏，严重的情况下可能会照成内存溢出。
