@@ -60,6 +60,54 @@ const formatNumber = n => {
 
 ## Promise
 
+```js
+   // promise的基本用法
+    // new promise
+    // 三个状态
+    // resolve reject
+    // then
+    // catch
+    // all  所有都为成功时返回按照顺序排列的结果数组，有一个失败就失败
+    // any  当有一个成功就会返回成功 不管谁在前还是后
+    // race  谁快返回谁
+    // 链式调用
+  
+  // 手写promise类 简单版本
+    class Mypromise{
+        static PENDING="pending";
+        static FULFILLED="fulfilled";
+        static REJECTED="rejected";
+        constructor(func){
+            this.promisestate = Mypromise.PENDING
+            this.promiseresult = null
+            func(this.resolve.bind(this), this.reject.bind(this))
+        }
+        resolve(result){
+            if(this.promisestate === Mypromise.PENDING){
+                this.promisestate = Mypromise.FULFILLED
+                this.promiseresult = result
+            }
+        }
+        reject(result){
+            if(this.promisestate === Mypromise.PENDING){
+                this.promisestate = Mypromise.REJECTED
+                this.promiseresult = result
+            }
+        }
+        then(onFulfilled, onRejected){
+            const promise2 = new Mypromise((resolve, reject) => {
+                if(this.promisestate = Mypromise.FULFILLED){
+                    onFulfilled(this.promiseresult)
+                }
+                if(this.promisestate = Mypromise.REJECTED){
+                    onRejected(this.promiseresult)
+                }
+            })
+            return Mypromise
+        }
+    }
+```
+
 
 
 ## 虚拟列表
@@ -69,6 +117,7 @@ const formatNumber = n => {
 ## 发布订阅
 
 ```js
+
 class PubSub {
     // 
     constructor() {
@@ -99,9 +148,6 @@ class PubSub {
         console.log(fn)
         if (this.event[key]) {
             let index = this.event[key].findIndex(e => e == fn);
-            this.event[key].forEach(e => {
-                console.log(e == fn)
-            })
             if (index !== -1) {
                 this.event[key].splice(index, 1)
             }
@@ -493,3 +539,55 @@ settimeout
 封装对象的私有属性
 
 会找出内存泄漏，严重的情况下可能会照成内存溢出。
+
+## 跨域解决的几种方式
+
+jsonp 只能请求Get
+
+cors
+
+nginx
+
+node中间件
+
+postmessage
+
+iframe
+
+websocket
+
+## 判断数据类型的几种方式
+
+首先数据类型分为基本数据类型，占用空间小，直接存储在栈中，有Boolean, number, string, undefined, null, symbol, bigint
+
+symbol跟bigint是es6才有的，symbol创建处理的数据是一定不会重复的，一般通过遍历对象不能取出symbol，要通过Object.getOwnpropertySymbol取
+
+另外一种是引用数据类型Object(对象，数组，函数，正则表达式对象，Map对象,Date对象等),数据比较大，一般就是把变量存在栈中，如何数据存在堆中，他们之间用一个指针相连接。
+
+判断数据类型
+
+- typeof (判断基本数据类型， null是object, 引用数据类型除了function是function之外，其他都是Object)
+- instanceof(可以判断number, string, bigint, boolean, 和引用数据类型)，这种方法是通过检查实例对象的原型链是否在构造函数的原型上，但是这个会有一个问题，因为引用数据类型的祖先都是Object，所以引用数据类型 instanceof Object 都是true。
+- constructor 构造器 比较准确但是只能判断引用数据类型
+- object.prototype.toString方法 返回字符串'[object 类型]'
+
+## Object.defineProperty
+
+解释:会在一个对象上定义一个新属性或者修改一个现有属性，并返回该对象
+
+```
+Object.defineProperty(obj, prop, descriptor)
+```
+
+- obj 要修改的对象
+- prop要定义或修改的属性
+- descrioptor要定义或修改的属性描述符。
+
+描述符
+
+- configurable 是否允许描述符改变
+- enumerable 是否允许出现在对象的可枚举属性中
+- value 该属性的值
+- writable 是否允许value值改变
+- get 获取属性值
+- set 更改属性值

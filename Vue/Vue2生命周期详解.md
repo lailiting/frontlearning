@@ -77,3 +77,7 @@ keep-alive是一个抽象的组件，不会被渲染到真实的DOM中
 原理：Vue 的缓存机制并不是直接存储 DOM 结构，而是将 DOM 节点抽象成了一个个 VNode节点，所以，keep- alive的缓存也是基于VNode节点的而不是直接存储DOM结构。
 
 其实就是将需要缓存的VNode节点保存在this.cache中／在render时,如果VNode的name符合在缓存条件（可以用include以及exclude控制），则会从this.cache中取出之前缓存的VNode实例进行渲染。
+
+## vue2响应式原理
+
+采用的是数据劫持和发布订阅模式实现数据响应式，使用Object.definePropety的setter跟getter来劫持数据，将数据变动时发布消息给订阅者，订阅者收到消息时做相应处理，获取数据时使用Object.definePropety的getter，当数据改变时触发setter，在setter中做更新DOM的操作，如果数据量很大，一次性递归开销很大，不能监听到对象的新增属性跟删除属性，不能监听数组的一些方法跟通过数组下标改变值。
