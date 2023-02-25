@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    let arr = [{
+            key: 1,
+            title: '1',
+            parent: 0,
+            isLeaf: false,
+            children: []
+        },
+        {
+            key: 11,
+            title: '1-1',
+            parent: 1,
+            isLeaf: false,
+            children: []
+        },
+        {
+            key: 111,
+            title: '1-1-1',
+            parent: 11,
+            isLeaf: true,
+            children: []
+        },
+        {
+            key: 112,
+            title: '1-1-2',
+            parent: 11,
+            isLeaf: false,
+            children: []
+        },
+        {
+            key: 1121,
+            title: '1-1-2-1',
+            parent: 112,
+            isLeaf: true,
+            children: []
+        },
+        {
+            key: 12,
+            title: '1-2',
+            parent: 1,
+            isLeaf: false,
+            children: []
+        },
+
+        {
+            key: 2,
+            title: '2',
+            parent: 0,
+            isLeaf: false,
+            children: []
+        },
+        {
+            key: 21,
+            title: '2-1',
+            parent: 2,
+            isLeaf: true,
+            children: []
+        },
+        {
+            key: 22,
+            title: '2-2',
+            parent: 2,
+            isLeaf: false,
+            children: []
+        },
+        {
+            key: 221,
+            title: '2-2-1',
+            parent: 22,
+            isLeaf: true,
+            children: []
+        },
+
+        {
+            key: 3,
+            title: '3',
+            parent: 0,
+            isLeaf: false,
+            children: []
+        },
+        {
+            key: 31,
+            title: '3-1',
+            parent: 3,
+            isLeaf: true,
+            children: []
+        },
+        {
+            key: 32,
+            title: '3-2',
+            parent: 3,
+            isLeaf: true,
+            children: []
+        }
+    ]
+
+    function arrToTree(arr, parentId) {
+        return arr.filter(item => parentId === undefined ? item.parent === 0 : item.parent === parentId).map(item => {
+            item.children = arrToTree(arr, item.key)
+            return item
+        })
+    }
+
+    function transferTree(list) {
+        var map = {};
+        var result = [];
+        list.forEach((item) => {
+            map[item.key] = item;
+        });
+        list.forEach((item) => {
+            let parent = map[item.parent];
+            if (parent) {
+                if (!parent.children) {
+                    parent.children = [];
+                }
+                parent.children.push(item);
+            } else {
+                result.push(item);
+            }
+        });
+        console.log(list)
+        return result;
+    }
+
+    let tree = arrToTree(arr)
+
+    console.log(tree)
+    console.log(transferTree(arr))
+</script>
+
+</html>
