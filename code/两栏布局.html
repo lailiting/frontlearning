@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 第一种通过float */
+        .container{
+            height: 100vh;
+            overflow: hidden;
+        }
+        .left{
+            float: left;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+        .right{
+            margin-left: 240px;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第二种BFC */
+        .container{
+            height: 100vh;
+            overflow: hidden;
+        }
+        .left{
+            float: left;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+        .right{
+            overflow: auto;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第三种 flex */
+        .container{
+            display: flex;
+            height: 100vh;
+        }
+        .left{
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+        .right{
+            flex: 1;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第四种 position */
+        .container {
+            position: relative;
+            height: 100vh;
+        }
+
+        .left {
+            position: absolute;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+
+        .right {
+            margin-left: 240px;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第五种 position */
+        .container {
+            position: relative;
+            height: 100vh;
+        }
+
+        .left {
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+
+        .right {
+            position: absolute;
+            left: 240px;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第六种 */
+        .container {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .left {
+            float: left;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+
+        .right {
+            float: left;
+            width: calc(100% - 240px);
+            background-color: red;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+</body>
+
+</html>

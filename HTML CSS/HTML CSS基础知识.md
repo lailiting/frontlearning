@@ -53,6 +53,129 @@ IE盒模型不会撑开盒子
 
 ## 两栏布局
 
+七种方法
+
+- float
+- flex
+- bfc
+- position absolute
+- float +calc
+
+```css
+
+        /* 第一种通过float */
+        .container{
+            height: 100vh;
+            overflow: hidden;
+        }
+        .left{
+            float: left;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+        .right{
+            margin-left: 240px;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第二种BFC */
+        .container{
+            height: 100vh;
+            overflow: hidden;
+        }
+        .left{
+            float: left;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+        .right{
+            overflow: auto;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第三种 flex */
+        .container{
+            display: flex;
+            height: 100vh;
+        }
+        .left{
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+        .right{
+            flex: 1;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第四种 position */
+        .container {
+            position: relative;
+            height: 100vh;
+        }
+
+        .left {
+            position: absolute;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+
+        .right {
+            margin-left: 240px;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第五种 position */
+        .container {
+            position: relative;
+            height: 100vh;
+        }
+
+        .left {
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+
+        .right {
+            position: absolute;
+            left: 240px;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background-color: red;
+            height: 100%;
+        }
+        /* 第六种 */
+        .container {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .left {
+            float: left;
+            width: 240px;
+            background-color: aqua;
+            height: 100%;
+        }
+
+        .right {
+            float: left;
+            width: calc(100% - 240px);
+            background-color: red;
+            height: 100%;
+        }
+          <div class="container">
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+```
+
+
+
 ## 三栏布局
 
 三栏布局就是网页上有三栏，要最先加载中间的HTML，所以中间的放在最前面
@@ -212,3 +335,28 @@ left,right,top,bottom:0 margin auto
 ## 隐藏的方式
 
 ## 移动端适配
+
+## flex细节
+
+## position
+
+可以通过left,right,top,bottom来控制元素宽度
+
+- static 普通定位元素
+- relative 会占用空间，相对自己的占用位置进行移动
+- absolute 相对于在最近的非static元素进行移动，不会占用空间
+- fiexd 固定在相对视口的位置
+- sticky 必须指定top, left, right, bottom其中一个，一开始是相对定位，然后当屏幕开始滚动的时候，判断是否到达元素指定的位置然后固定在那个位置
+
+sticky运用
+
+```css
+  .nav {
+            background-color: aliceblue;
+            width: 100%;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0px;
+        }
+```
+
