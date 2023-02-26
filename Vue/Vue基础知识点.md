@@ -1,4 +1,4 @@
-# Vue2生命周期详解
+## Vue基础知识点
 
 ## 生命周期历程
 
@@ -54,13 +54,13 @@
 
 若组件实例是 [``](https://cn.vuejs.org/api/built-in-components.html#keepalive) 缓存树的一部分，当组件从 DOM 中被移除时调用。
 
-## 面试题
 
-- **异步请求是放在Created生命周期还是Mounted生命周期**
+
+## 异步请求是放在Created生命周期还是Mounted生命周期
 
 一般情况下是在create生命周期，但是如果需要先渲染子组件数据再渲染父组件数据的话则放再mounted生命周期，因为父子组件的渲染过程是先进行父组件的beforeCreate,created,beforeMount然后渲染子组件的beforeCreate,created,beforeMount，Mouned最后再是父组件的Mounted，如果需要先渲染子组件数据的话，把异步函数放在Created里面会增加子组件的loading时间，但是在一般情况下，放在created里面可以更快的获取到服务端的数据，然后因为这个时候data已经挂载到了vue实例里面了，如果有重复调用统一的函数的情况的话，也可以直接调用，增加代码复用性，另外还能有助于统一性。**ssr(服务器渲染)**不支持beforecreate和mounted
 
-- **keep-alive缓存有哪些作用**
+## keep-alive缓存有哪些作用
 
 keep-alive包裹一个组件，会缓存不活动的组件实例，主要用于保留组件状态或避免重复渲染。
 
@@ -78,6 +78,94 @@ keep-alive是一个抽象的组件，不会被渲染到真实的DOM中
 
 其实就是将需要缓存的VNode节点保存在this.cache中／在render时,如果VNode的name符合在缓存条件（可以用include以及exclude控制），则会从this.cache中取出之前缓存的VNode实例进行渲染。
 
-## vue2响应式原理
+## proxy
 
-采用的是数据劫持和发布订阅模式实现数据响应式，使用Object.definePropety的setter跟getter来劫持数据，将数据变动时发布消息给订阅者，订阅者收到消息时做相应处理，获取数据时使用Object.definePropety的getter，当数据改变时触发setter，在setter中做更新DOM的操作，如果数据量很大，一次性递归开销很大，不能监听到对象的新增属性跟删除属性，不能监听数组的一些方法跟通过数组下标改变值。
+```js
+  let obj = {
+        a :23,
+        b:{
+            ss:2
+        },
+        c:[2,3,4]
+    }
+    let obj2 = new Proxy(obj, {
+        get(target, key){
+            console.log(`读了${target}为${key}`)
+            return target[key]
+        },
+        set(target, key, newval){
+            console.log(`改了${target}为${newval}`)
+            target[key] = newval
+        }
+    })
+    obj2.b.ss = 7
+    obj2.c.push(5)
+    console.log(obj)
+```
+
+## Object.defineProperty
+
+vue响应式原理采用的是数据劫持和发布订阅模式实现数据响应式，使用Object.definePropety的setter跟getter来劫持数据，将数据变动时发布消息给订阅者，订阅者收到消息时做相应处理，获取数据时使用Object.definePropety的getter，当数据改变时触发setter，在setter中做更新DOM的操作，如果数据量很大，一次性递归开销很大，不能监听到对象的新增属性跟删除属性，不能监听数组的一些方法跟通过数组下标改变值。
+
+解释:会在一个对象上定义一个新属性或者修改一个现有属性，并返回该对象
+
+```
+Object.defineProperty(obj, prop, descriptor)
+```
+
+- obj 要修改的对象
+- prop要定义或修改的属性
+- descrioptor要定义或修改的属性描述符。
+
+描述符
+
+- configurable 是否允许描述符改变
+- enumerable 是否允许出现在对象的可枚举属性中
+- value 该属性的值
+- writable 是否允许value值改变
+- get 获取属性值
+- set 更改属性值
+
+手写
+
+```js
+  function Observer(obj) {
+        //如果传入的不是一个对象，return
+        if (typeof obj !== "object" || obj === null) {
+            return
+        }
+        // for (key in obj) {
+        Object.keys(obj).forEach((key) => {
+            defineProperty(obj, key, obj[key])
+        })
+        // }
+
+    }
+    // 把data上面的数据绑定到vm中，并用Obejct.defineProperty重写get set
+    function defineProperty(obj, key, val) {
+        //如果某对象的属性也是一个对象，递归进入该对象，进行监听
+        if (typeof val === 'object') {
+            Observer(val)
+        }
+        Object.defineProperty(obj, key, {
+            get() {
+                console.log(`访问了${key}属性`)
+                return val
+            },
+            set(newVal) {
+                console.log(`${key}属性被修改为${newVal}了`)
+                data[key] = newVal
+                document.querySelector('#app').textContent= newVal
+            }
+        })
+    }
+
+```
+
+## 批量异步跟新DOM
+
+Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 数据变化监听 被多次触发，只会被推入到队列中一次。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替。
+
+## $nextick
+
+vue更新DOM是异步的，但是我们要处理一些操作要获取更新后的DOM，比如我们给列表赋值数据之后要 获取到列表项的高度，这个时候就可以用$nextick

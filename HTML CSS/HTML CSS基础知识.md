@@ -349,6 +349,12 @@ display:flex缺点不兼容ie，优点减少重绘重排，简单，方便
 - flex-shink 默认1
 - flex-grow 
 
+[CSS](https://developer.mozilla.org/zh-CN/docs/Web/CSS) 属性 **`flex-basis`** 指定了 flex 元素在主轴方向上的初始大小 带单位
+
+CSS 属性 **`flex-grow`** [CSS](https://developer.mozilla.org/zh-CN/docs/Web/CSS) 设置 flex 项 [主尺寸](https://www.w3.org/TR/css-flexbox/#main-size) 的 flex 增长系数。
+
+[CSS](https://developer.mozilla.org/zh-CN/docs/Web/CSS) **`flex-shrink`** 属性指定了 flex 元素的收缩规则。
+
 ## position
 
 可以通过left,right,top,bottom来控制元素宽度
@@ -371,9 +377,22 @@ sticky运用
         }
 ```
 
-## 块元素行内块元素
-
 ## BFC
+
+块级格式化上下文，就是BFC内部的元素不会影响到外部元素
+
+解决的问题
+
+float元素跟普通元素的折叠问题，实现两栏布局
+
+float盒子父级元素塌陷问题
+
+上下margin塌陷问题
+
+- overflow: 非visiable
+- display flex grid inline-bloack
+- postion fixed absolute
+- 
 
 ## HTML5语义化
 

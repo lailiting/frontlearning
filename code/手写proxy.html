@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let obj = {
+        a :23,
+        b:{
+            ss:2
+        },
+        c:[2,3,4]
+    }
+    let obj2 = new Proxy(obj, {
+        get(target, key){
+            console.log(`读了${target}为${key}`)
+            return target[key]
+        },
+        set(target, key, newval){
+            console.log(`改了${target}为${newval}`)
+            target[key] = newval
+        }
+    })
+    obj2.b.ss = 7
+    obj2.c.push(5)
+    console.log(obj)
+</script>
+</html>

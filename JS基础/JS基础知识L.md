@@ -56,7 +56,7 @@ const formatNumber = n => {
 }
 ```
 
-## 正则表达式匹配
+
 
 ## Promise
 
@@ -589,14 +589,6 @@ const clone = (target) => {
 }
 ```
 
-## cumpted和waterer实现
-
-## React基础知识
-
-## 位运算符
-
-浏览器兼容问题
-
 ## 视口高度
 
 ```js
@@ -619,14 +611,6 @@ document.getElementById("div").offsetTop // 元素的实际距离上边界的距
 
 
 ```
-
-
-
-## 性能优化
-
-
-
-## $nextick
 
 ## 数组转树形结构
 
@@ -824,8 +808,6 @@ DOM断点，在浏览器开发者工具里面的elements选择卡选择要断点
 
 不同点：cookie是服务端写入的，而sessionStorage跟localStorage是由前端写入的，cookie的生命周期是后端定义的，而localstorage是写入后会一直存在浏览器中，除非手动清除，而sessionStrorage是会话存储，如果这个标签页关闭的话就会清除，cookie的存储为4KB比较小而另外两个有大概5M，cookie会在向后端发请求的时候自动携带cookie，另外两个不会，cookie适合用来存储sessionID和token,localstroage适合存储不易变动的数据，sessionStorage可以保持刷新前的一些数据。
 
-## 预编译
-
 ## 作用域
 
 在es5里面只有全局作用域和函数作用域
@@ -885,27 +867,6 @@ symbol跟bigint是es6才有的，symbol创建处理的数据是一定不会重�
 - constructor 构造器 比较准确但是只能判断引用数据类型
 - object.prototype.toString方法 返回字符串'[object 类型]'
 
-## Object.defineProperty
-
-解释:会在一个对象上定义一个新属性或者修改一个现有属性，并返回该对象
-
-```
-Object.defineProperty(obj, prop, descriptor)
-```
-
-- obj 要修改的对象
-- prop要定义或修改的属性
-- descrioptor要定义或修改的属性描述符。
-
-描述符
-
-- configurable 是否允许描述符改变
-- enumerable 是否允许出现在对象的可枚举属性中
-- value 该属性的值
-- writable 是否允许value值改变
-- get 获取属性值
-- set 更改属性值
-
 ## Map类型
 
 map.set()
@@ -918,13 +879,84 @@ map.size()
 
 map.entries()
 
+map默认情况不包含任何键，object有原型，自己的键可能会跟原型冲突
+
+map是有顺序的，按插入顺序排序  object目前是有序的，但是排序规则很复杂
+
+map键可以是任意类型 object只能是string或者symbol类型
+
+map可以获取对象长度 object不能
+
+map是可迭代的  object没有迭代协议不能通过for of迭代 但是可以用object.keys values for in
+
+map对键的增删改查有优化
+
+## WeakMap
+
+**`WeakMap`** 对象是一组键/值对的集合，其中的键是弱引用的。其键必须是对象，而值可以是任意的。
+
 ## typescript
 
+用来规范化JS，可以让项目跟清晰规范
 
+类型
 
-## redux
+- number
+- string
+- enum
+- array
+- tuple
+- any
+- unknow
+- never
+- void
+- null undefind
 
-## 继承手写
+(any是所有类型都包括，所有类型都能赋值给any类型，unknow是所有类型都能包括但是只有any跟unknow类型可以赋值给unknow)
+
+type跟interface
+
+type跟interface都可以用来描述对象跟函数
+
+type通过&拓展  interface 通过Extends拓展
+
+type可以声明基本类型联合类型和元组 interface不行
+
+interface可以合并声明
+
+ts 内置类型
+
+利用泛型跟keyof 实现的
+
+- partial 循环对象把它转为非必须
+
+  type partial<T> = {
+
+  ​	[p in keyof t] : t[p]
+
+  }
+
+- require 循环对象把它转为必须
+
+- randonly  
+
+  type randonly<T> = {
+
+  randonly [p in  keyof  T] :T[p]
+
+  }
+
+- pick 选出在给定参数的
+
+  type pick<T,K extends t> = {
+
+  [p in k ] :t[p]
+
+  }
+
+- exclude 选出 T是否是U的子类型的    type Exclude<T,U> = T extends U? never:t
+
+- omit  pick<T, exclude<keyof T, K>>
 
 ## 扁平化数组
 
@@ -962,12 +994,6 @@ map.entries()
 
 
 
-## 性能优化
-
-## 垃圾回收机制
-
-## 内存泄漏
-
 ## 箭头函数
 
 es6语法，是一个匿名函数，它的this默认指向它所处的执行期上下对象里面的this
@@ -1000,3 +1026,58 @@ const常量不能改变
 - 在函数体里面找函数声明，值赋予函数体
 
 ## 断点重传
+
+思路大概就是将文件转成Blob对象，利用Blob.prototype.slice将文件进行分片，然后每个文件分片要设定一个一个根据文件内容的hash值，用来给客服端和服务器表示那些文件片已经上传了，那些文件还没上传，上传了的切片就不用上传了，这些切片可以并发请求，将文件切片，切片 hash，以及文件名放入 formData 中，再调用上一步的 `request` 函数返回一个 proimise，最后调用 Promise.all 并发上传所有的切片,秒传就是把hash值传给后端判断，如果这个hash在已上传列表切片中，返回200，上传成功，上传成功就将把这个切片从请求列表中删除，断点续传，暂停上传主要就是利用xmlhttprequest.abort方法取消，续传就是把还在请求列表里面的切片重新上传。
+
+## 性能优化
+
+1. 文件加载方面可以进行文件压缩，图片压缩，
+2. 可以用雪碧图 跟节流防抖减少网络请求次数 
+3. 还可以继续HTTP缓存 本地缓存 vue的keep-alive减少渲染次数  对DOM查询进行缓存 对DOM操作进行合并也可以减少渲染次数
+4. 使用懒加载避免无用加载
+5. SSR服务器端渲染 让渲染加快
+6. style放在head标签 script放在body底部 避免渲染堵塞
+
+## ssr和csr
+
+服务端渲染是服务端直接到生成的HTML发送给客户端
+
+服务端渲染的优势：减少网络传输，响应快，用户体验好，首屏渲染快，对搜索引擎友好，搜索引擎爬虫可以看到完整的程序源码，有利于SEO
+
+## 内存泄漏
+
+监听事件为清除
+
+闭包
+
+settimeout setinterval
+
+## 输入URL经历了什么
+
+大致是解析IP地址，进行HTTP请求，如果是强制缓存则不在向服务端请求，如果是协商缓存则判断数据是否发生变化，如果没有返回304，从缓存中拿数据，如果发生了变化服务器返回最新数据，数据获取成功后开始渲染页面，同时也会获取图片音频视频，CSS,JS渲染过程就是HTML转成DOM树，CSS转成stylesheet,根据他们两个创建布局树，将布局树分层，为每个图层绘制列表，然后分块，利用光栅化把分块转成位图，最后合成为页面
+
+## 浏览器怎么进行的DOM渲染
+
+## 重绘重排是什么
+
+## 垃圾回收机制
+
+## 继承手写
+
+## SEO
+
+HTML5语义化 标题用H1  重点内容em header footer
+
+导航优化
+
+面包屑
+
+加首页链接
+
+重要内容先渲染
+
+可以用服务端渲染
+
+img a连接这些写上alt属性 title
+
+性能优化 懒加载 精灵图这些
