@@ -108,13 +108,161 @@ const formatNumber = n => {
     }
 ```
 
+promise.all
+
+```js
+    function myPromiseall(promiseList) {
+        return new Promise((resolve, reject) => {
+            if (!Array.isArray(promiseList)) {
+                reject(new Error("输入的不是数组"))
+            }
+            let res = []
+            let count = 0
+            for (let i = 0; i < promiseList.length; i++) {
+                Promise.resolve(promiseList[i]).then(value => {
+                    count++
+                    res[i] = value
+                    if (count === promiseList.length) {
+                        resolve(res)
+                    }
+                }).catch(err => {
+                    reject(err)
+                })
+            }
+        })
+    }
+```
+
+promise.any
+
+```js
+   // 手写promise.any
+    function myPromiseany(promiseList){
+        return new Promise((resolve,reject) => {
+            if(!Array.isArray(promiseList)){
+                reject(new Error(""))
+            }
+            let count = 0
+            let errorlist = []
+            for(let i = 0; i < promiseList.length; i++){
+                Promise.resolve(promiseList[i]).then(value => {
+                    resolve(value)
+                },err => {
+                    count++
+                    errorlist[i] = err
+                    if(count === promiseList.length){
+                        reject(errorlist)
+                    }
+                })
+            }
+        })
+    }
+```
+
 
 
 ## 虚拟列表
 
+```js
+<template>
+    <div class="list-container" ref="main" @scroll="scrollEvent">
+        <div class="list-all" :style="{height : listAllHeight + 'px'}"></div>
+        <div class="list-visiable" :style="{transform : getTransform}">
+            <div class="list-item"  :style="{ lineHeight: itemSize + 'px' }" v-for="item in visiableData" :key="item.id">{{item.value}}</div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name:"MyListRander",
+    props:{
+        // 所有列表数据
+        listData:{
+            type:Array,
+            default:() =>[]
+        },
+        // 元素高度
+        itemSize:{
+            type:Number,
+            default:200
+        },
+    },
+    data(){
+        return {
+            // 可视区高度
+            visiableHeight:0,
+            start:0,
+            end:0,
+            startOffset:0
+        }
+    },
+    computed:{
+        // 列表总高度
+        
+        listAllHeight(){
+            return this.listData.length * this.itemSize
+        },
+         // 可视区数量
+         visiableCount(){
+            return Math.ceil(this.visiableHeight/this.itemSize)
+         },
+         // 可视区数据
+         visiableData(){
+            console.log(this.listData.slice(this.start, Math.min(this.end, this.listData.length)))
+            return this.listData.slice(this.start, Math.min(this.end, this.listData.length))
+         },
+        // 偏移位置
+        getTransform(){
+            return `translate3d(0,${this.startOffset}px,0)`;
+        }
+    },
+    mounted(){
+        this.visiableHeight = this.$el.clientHeight
+        this.start = 0
+        this.end = this.visiableCount + this.start
+    },
+    methods:{
+        scrollEvent(){
+            let scrollTop = this.$refs.main.scrollTop
+            this.start = Math.floor(scrollTop/this.itemSize)
+            this.end = this.start + this.visiableCount
+            this.startOffset = scrollTop - (scrollTop % this.itemSize)
+        }
+    }
+
+}
+</script>
+
+<style>
+.list-container{
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+}
+.list-all{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+.list-visiable{
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+    text-align: center;
+}
+</style>
+```
+
 
 
 ## 发布订阅
+
+发布订阅模式简单来说就是有一个中介，比如我们在可以通过小红书关注博主，当博主发布新的作品时，小红书就会发布消息通知我们。
 
 ```js
 
@@ -197,6 +345,38 @@ county.pubsub("旧厂", "500万")
 
 ## 观察者模式
 
+观察者模式相当于一个任务大厦，观察者订阅任务大厦的任务，当任务大厦有任务时就通知观察者。
+
+```js
+   class Obeserver{
+        constructor(name){
+            this.name = name
+        }
+        update(taskname){
+            console.log(`${this.name}收到${taskname}`)
+        }
+    }
+
+    class Publisher{
+        constructor(){
+            this.list = []
+        }
+        addObeserver(obeserver){
+            this.list.push(obeserver)
+        }
+        notice(taskname){
+            this.list.forEach(obeserver => obeserver.update(taskname))
+        }
+    }
+
+    const puber = new Publisher()
+    const pub1 = new Obeserver("黎明")
+    const pub2 = new Obeserver("刘海")
+    puber.addObeserver(pub1)
+    puber.addObeserver(pub2)
+    puber.notice("打铁任务")
+```
+
 
 
 ## 防抖节流
@@ -232,15 +412,157 @@ let dounbe = function(fn,dalay){
 }
 ```
 
-## setTimeout setInterval
-
 ## 懒加载
 
+```js
+    if ("IntersectionObserver" in window) {
+            let lazyImageObserver = new IntersectionObserver(function (entries) {
+                console.log(entries)
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        let lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        // lazyImage.srcset = lazyImage.dataset.srcset;
+                        lazyImage.classList.remove("lazy");
+                        lazyImageObserver.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            lazyImages.forEach(function (lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+        } else {
+            // Possibly fall back to a more compatible method here
+
+            const lazyLoad = function () {
+                if (active === false) {
+                    active = true;
+
+                    setTimeout(function () {
+                        lazyImages.forEach(function (lazyImage) {
+                            if ((lazyImage.getBoundingClientRect().top <= window
+                                    .innerHeight && lazyImage.getBoundingClientRect()
+                                    .bottom >= 0) && getComputedStyle(lazyImage).display !==
+                                "none") {
+                                lazyImage.src = lazyImage.dataset.src;
+                                lazyImage.srcset = lazyImage.dataset.srcset;
+                                lazyImage.classList.remove("lazy");
+
+                                lazyImages = lazyImages.filter(function (image) {
+                                    return image !== lazyImage;
+                                });
+
+                                if (lazyImages.length === 0) {
+                                    document.removeEventListener("scroll", lazyLoad);
+                                    window.removeEventListener("resize", lazyLoad);
+                                    window.removeEventListener("orientationchange",
+                                        lazyLoad);
+                                }
+                            }
+                        });
+
+                        active = false;
+                    }, 200);
+                }
+            };
+
+            document.addEventListener("scroll", lazyLoad);
+            window.addEventListener("resize", lazyLoad);
+            window.addEventListener("orientationchange", lazyLoad);
+        }
+```
+
+
+
 ## bind apply call
+
+call
+
+```js
+Function.prototype.MyCall = function(context){
+    if(typeof this !== "function"){
+        throw new TypeError("error")
+    }
+​
+    context = context || window
+​
+    context.fn = this
+​
+    const args = [...arguments].slice(1)
+​
+    const result = context.fn(...args)
+​
+    delete context.fn
+​
+    return result
+}
+```
+
+apply
+
+```js
+Function.prototype.MyApply = function(context){
+     // this就是谁调用的MyApply，谁就是这里的this
+    //  要先判断this是不是function
+    if(typeof this !== 'function'){
+        throw new TypeError("error")
+    }
+    // 是否有上下文
+    // 如果没有上下文就是window
+    context = context || window
+   
+​
+    // apply的特性的参数是数组
+    const args = arguments[1] || []
+    context.fn = this
+    const result = context.fn(...args)
+    delete context.fn
+    return result
+}
+```
+
+bind
+
+```js
+Function.prototype.Mybind = (context, ...arg1){
+    if(typeof this !== "function"){
+            throw new TypeError("error")
+    }
+    const _this = this
+    return new function bind(...arg2){
+        return _this.call(context,..arg1,...arg2)
+    }
+}
+```
+
+
 
 ## 说一说JavaScript有几种方法判断变量的类型？
 
 typeof instanceof  constructor object.prototype.toString.call()
+
+```js
+   function instanceofa(left, right) {
+        if (typeof right !== "function" || left === null) {
+            return false
+        }
+        let rightprototype = right.prototype
+        let leftproto = left.__proto__
+        console.log(left.__proto__)
+        while (true) {
+            if (!leftproto) {
+                return false
+            }
+            if (leftproto === rightprototype) {
+                return true
+            }
+            leftproto = leftproto.__proto__
+        }
+    }
+```
+
+
 
 ## 浅拷贝和深拷贝
 
@@ -268,14 +590,6 @@ const clone = (target) => {
 ```
 
 ## cumpted和waterer实现
-
-## 块元素行内块元素
-
-## BFC
-
-## HTML5语义化
-
-## CSS
 
 ## React基础知识
 
@@ -604,17 +918,7 @@ map.size()
 
 map.entries()
 
-## 两栏布局
-
-## Http跟Https
-
-## 请求方法
-
-## 事件轮询
-
 ## CSRF攻击跟xrr攻击具体实现
-
-## 最近多用vue写dom
 
 ## Vue实现一个验证码
 

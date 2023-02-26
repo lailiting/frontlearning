@@ -338,6 +338,17 @@ left,right,top,bottom:0 margin auto
 
 ## flex细节
 
+display:flex缺点不兼容ie，优点减少重绘重排，简单，方便
+
+- flex-direction
+- flex-wrap
+- justify-content
+- algin-items
+- flex
+- flex-basis 默认0
+- flex-shink 默认1
+- flex-grow 
+
 ## position
 
 可以通过left,right,top,bottom来控制元素宽度
@@ -360,3 +371,10 @@ sticky运用
         }
 ```
 
+## 块元素行内块元素
+
+## BFC
+
+## HTML5语义化
+
+## CSS

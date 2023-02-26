@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    class Obeserver{
+        constructor(name){
+            this.name = name
+        }
+        update(taskname){
+            console.log(`${this.name}收到${taskname}`)
+        }
+    }
+
+    class Publisher{
+        constructor(){
+            this.list = []
+        }
+        addObeserver(obeserver){
+            this.list.push(obeserver)
+        }
+        notice(taskname){
+            this.list.forEach(obeserver => obeserver.update(taskname))
+        }
+    }
+
+    const puber = new Publisher()
+    const pub1 = new Obeserver("黎明")
+    const pub2 = new Obeserver("刘海")
+    puber.addObeserver(pub1)
+    puber.addObeserver(pub2)
+    puber.notice("打铁任务")
+</script>
+</html>
