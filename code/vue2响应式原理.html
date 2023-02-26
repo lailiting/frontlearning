@@ -21,7 +21,8 @@
         age: 18,
         a: {
             b: 1
-        }
+        },
+        arr:[1]
     }
     Observer(data)
 
@@ -59,7 +60,11 @@
     // console.log(data.a.b)
     setTimeout(() => {
         data.a.b = "赖丽婷23"
+        // data.arr = [2]
+
     }, 1000)
+    // console.log(data.arr[0])
+    data.arr.push(55)
 </script>
 
 </html>

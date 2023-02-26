@@ -918,16 +918,85 @@ map.size()
 
 map.entries()
 
-## CSRF攻击跟xrr攻击具体实现
-
-## Vue实现一个验证码
-
-## 算法跟项目整理
-
 ## typescript
+
+
 
 ## redux
 
 ## 继承手写
 
-## canvas
+## 扁平化数组
+
+```js
+ let arr =[1,2,[3,4,[5]]]
+    let result = []
+    function flatten1(arr){
+        if(Array.isArray(arr)){
+            arr.forEach(item => {
+                result.concat(flatten1(item))
+            })
+        }else{
+            result.push(arr)
+        }
+    }
+    // flatten1(arr)
+    function flatten2(arr){
+        return arr.reduce((pre, cur) => {
+            return pre.concat(Array.isArray(cur) ? flatten2(cur) : cur)
+        },[])
+    }
+    
+    function flatten3(arr){
+        let str = arr.toString()
+        return str.split(",").map(i => Number(i))
+    }
+    function flatten4(arr){
+        let str = JSON.stringify(arr)
+        str = str.replace(/(\[|\])/g,"")
+        str = "[" + str + "]"
+        return JSON.parse(str)
+    }
+    console.log(arr.flat(Infinity))
+```
+
+
+
+## 性能优化
+
+## 垃圾回收机制
+
+## 内存泄漏
+
+## 箭头函数
+
+es6语法，是一个匿名函数，它的this默认指向它所处的执行期上下对象里面的this
+
+为什么不能作为构造函数
+
+new 的过程是先创建一个空对象，然后绑定原型链，绑定自己的this 返回这个对象
+
+箭头函数没有自己的this，它指向的是里它最近的块级作用域里面的this,它也没有prototype实现，没办法让它的实例对象用__proto__来指向
+
+## let const
+
+不存在变量提升
+
+暂时性死区  绑定了块级作用域  如果在这个作用域外面let定义了一个变量 里面也定义了let变量 那么里面的作用域不会受到外面的影响，还是不能变量提升
+
+不可以重复声明
+
+const常量不能改变
+
+## 执行上下文
+
+全局执行上下文 window环境 GO
+
+函数执行上下文
+
+- 创建AO对象
+- 找形参和变量声明，将变量和形参名作为AO属性名，值为undefined
+- 将实参值和形参统一
+- 在函数体里面找函数声明，值赋予函数体
+
+## 断点重传

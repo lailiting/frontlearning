@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let arr =[1,2,[3,4,[5]]]
+    let result = []
+    function flatten1(arr){
+        if(Array.isArray(arr)){
+            arr.forEach(item => {
+                result.concat(flatten1(item))
+            })
+        }else{
+            result.push(arr)
+        }
+    }
+    // flatten1(arr)
+    function flatten2(arr){
+        return arr.reduce((pre, cur) => {
+            return pre.concat(Array.isArray(cur) ? flatten2(cur) : cur)
+        },[])
+    }
+    
+    function flatten3(arr){
+        let str = arr.toString()
+        return str.split(",").map(i => Number(i))
+    }
+    function flatten4(arr){
+        let str = JSON.stringify(arr)
+        str = str.replace(/(\[|\])/g,"")
+        str = "[" + str + "]"
+        return JSON.parse(str)
+    }
+    console.log(arr.flat(Infinity))
+</script>
+</html>

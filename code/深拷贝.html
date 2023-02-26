@@ -13,13 +13,29 @@
         // 第一种 JSON.parse(JSON.Stringfy())
 
         // 第二种  递归
+        // function clone(target, map = new Map()) {
+        //     let cloneTarget = Array.isArray(target) ? [] : {};
+        //     if (map.get(target)) {
+        //         return map.get(target);
+        //     }
+        //     map.set(target, cloneTarget);
+        //     console.log(map)
+        //     if (typeof target === 'object') {
+        //         for (const key in target) {
+        //             cloneTarget[key] = clone(target[key], map);
+        //         }
+        //         return cloneTarget;
+        //     } else {
+        //         return target;
+        //     }
+        // };
         function clone(target, map = new Map()) {
+            console.log(map)
             if (typeof target === 'object') {
-                let cloneTarget = target instanceof Array ? [] : {};
+                let cloneTarget = Array.isArray(target) ? [] : {};
                 if (map.get(target)) {
                     return map.get(target);
                 }
-                // 这里的cloneTarget是引用数据类型
                 map.set(target, cloneTarget);
                 for (const key in target) {
                     cloneTarget[key] = clone(target[key], map);
@@ -30,9 +46,8 @@
             }
         };
 
-
         //测试
-        const obj = {
+        let obj = {
             name: 'Jack',
             address: {
                 x: 100,
@@ -42,7 +57,9 @@
             b: Symbol('22')
         }
         obj.obj = obj //循环引用，会一直嵌套
+        // obj.name = "理想"
         const newObj = clone(obj)
+        obj.name = "理想"
         console.log('obj', obj)
         console.log('newObj', newObj)
     </script>
