@@ -45,7 +45,7 @@
                 // if (index !== -1) {
                 //     this.event[key].splice(index, 1)
                 // }
-                this.event.filter(e => e != fn && e.initialCallback !== fn)
+                this.event.filter(e => e != fn)
             } else {
                 return false
             }
@@ -76,7 +76,7 @@
 
             // 由于：我们订阅事件的时候，修改了原回调函数的引用，所以，用户触发 off 的时候不能找到对应的回调函数
             // 所以，我们需要在当前函数与用户传入的回调函数做一个绑定，我们通过自定义属性来实现
-            one.initialCallback = callback;
+            // one.initialCallback = one;
             this.on(eventName, one)
         }
 

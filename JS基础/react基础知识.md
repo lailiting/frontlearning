@@ -1,18 +1,4 @@
-# React Hooks
-
-Hooks索引
-
-基本Hooks
-
-[useState]()
-
-useEffect
-
-useContext
-
-其他Hooks
-
-useReducer
+## react基础知识
 
 ## 概念叙述
 
@@ -51,4 +37,10 @@ useState的替代物，更加便捷
 
 惰性初始化
 
-## ToodList实战
+useMemo
+
+因为react父组件发生变化后，子组件也会发生变化，用useMemo包裹一个函数可以避免这种情况
+
+useCallback差不多 不管useMemo返回函数的结果，useCallback返回函数
+
+## 组件传参
