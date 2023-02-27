@@ -45,7 +45,7 @@
                 // if (index !== -1) {
                 //     this.event[key].splice(index, 1)
                 // }
-                this.event.filter(e => e!=fn && e.initialCallback !== fn)
+                this.event.filter(e => e != fn && e.initialCallback !== fn)
             } else {
                 return false
             }
@@ -62,23 +62,23 @@
         }
 
         // 只订阅一次
-        once(eventName, callback){
-        // 由于需要在回调函数执行后，取消订阅当前事件，所以需要对传入的回调函数做一层包装,然后绑定包装后的函数
-        const one = (...args)=>{
-            // 执行回调函数
-            callback(...args)
-            // 取消订阅当前事件
-            this.off(eventName, one)
+        once(eventName, callback) {
+            // 由于需要在回调函数执行后，取消订阅当前事件，所以需要对传入的回调函数做一层包装,然后绑定包装后的函数
+            const one = (...args) => {
+                // 执行回调函数
+                callback(...args)
+                // 取消订阅当前事件
+                this.off(eventName, one)
+            }
+            // 考虑：如果当前事件在未执行，被用户取消订阅，能否取消？
+
+
+
+            // 由于：我们订阅事件的时候，修改了原回调函数的引用，所以，用户触发 off 的时候不能找到对应的回调函数
+            // 所以，我们需要在当前函数与用户传入的回调函数做一个绑定，我们通过自定义属性来实现
+            one.initialCallback = callback;
+            this.on(eventName, one)
         }
-        // 考虑：如果当前事件在未执行，被用户取消订阅，能否取消？
-
-
-
-        // 由于：我们订阅事件的时候，修改了原回调函数的引用，所以，用户触发 off 的时候不能找到对应的回调函数
-        // 所以，我们需要在当前函数与用户传入的回调函数做一个绑定，我们通过自定义属性来实现
-        one.initialCallback = callback;
-        this.on(eventName, one)
-    }
 
     }
 

@@ -313,6 +313,25 @@ class PubSub {
             delete this.event[key]
         }
     }
+    
+          // 只订阅一次
+        once(eventName, callback) {
+            // 由于需要在回调函数执行后，取消订阅当前事件，所以需要对传入的回调函数做一层包装,然后绑定包装后的函数
+            const one = (...args) => {
+                // 执行回调函数
+                callback(...args)
+                // 取消订阅当前事件
+                this.off(eventName, one)
+            }
+            // 考虑：如果当前事件在未执行，被用户取消订阅，能否取消？
+
+
+
+            // 由于：我们订阅事件的时候，修改了原回调函数的引用，所以，用户触发 off 的时候不能找到对应的回调函数
+            // 所以，我们需要在当前函数与用户传入的回调函数做一个绑定，我们通过自定义属性来实现
+            one.initialCallback = callback;
+            this.on(eventName, one)
+        }
 
 }
 
@@ -538,55 +557,30 @@ Function.prototype.Mybind = (context, ...arg1){
 
 
 
-## 说一说JavaScript有几种方法判断变量的类型？
-
-typeof instanceof  constructor object.prototype.toString.call()
-
-```js
-   function instanceofa(left, right) {
-        if (typeof right !== "function" || left === null) {
-            return false
-        }
-        let rightprototype = right.prototype
-        let leftproto = left.__proto__
-        console.log(left.__proto__)
-        while (true) {
-            if (!leftproto) {
-                return false
-            }
-            if (leftproto === rightprototype) {
-                return true
-            }
-            leftproto = leftproto.__proto__
-        }
-    }
-```
-
-
-
 ## 浅拷贝和深拷贝
 
 递归调用实现深拷贝
 
+浅拷贝  拓展运算符 object.assgin
+
 ```js
 // 检测数据类型的功能函数
-const checkedType = (target) => Object.prototype.toString.call(target).replace(/\[object (\w+)\]/, "$1").toLowerCase();
-// 实现深拷贝（Object/Array）
-const clone = (target) => {
-    let result;
-    let type = checkedType(target);
-    if(type === 'object') result = {};
-    else if(type === 'array') result = [];
-    else  return target;
-    for (let key in target) {
-        if(checkedType(target[key]) === 'object' || checkedType(target[key]) === 'array') {
-            result[key] = clone(target[key]);
-        } else {
-            result[key] = target[key]; 
-        }
-    }
-    return result;
-}
+   function clone(target, map = new Map()) {
+            console.log(map)
+            if (typeof target === 'object') {
+                let cloneTarget = Array.isArray(target) ? [] : {};
+                if (map.get(target)) {
+                    return map.get(target);
+                }
+                map.set(target, cloneTarget);
+                for (const key in target) {
+                    cloneTarget[key] = clone(target[key], map);
+                }
+                return cloneTarget;
+            } else {
+                return target;
+            }
+        };
 ```
 
 ## 视口高度
@@ -613,6 +607,31 @@ document.getElementById("div").offsetTop // 元素的实际距离上边界的距
 ```
 
 ## 数组转树形结构
+
+```js
+    function changeTotree(list){
+        let map = new Map()
+        let result = []
+        list.forEach(element => {
+            let key = element.key
+            map.set(key, element)
+        });
+
+        list.forEach(item => {
+            let parent = map.get(item.parent)
+            console.log(parent)
+            if(parent){
+                if(!parent.children){
+                    parent.children=[]
+                }
+                parent.children.push(item)
+            }else{
+                result.push(item)
+            }
+        })
+        return result
+    }
+```
 
 ## 扁平化数组
 
@@ -753,7 +772,7 @@ JS分为执行栈和任务队列，而任务分为宏任务和微任务，事件
 
 - promise.then.catch.finally
 - MutationObserver
-- async awiat
+- async awiat下面的任务是微任务
 - process.nextTick(Node环境)
 
 宏任务
@@ -866,6 +885,26 @@ symbol跟bigint是es6才有的，symbol创建处理的数据是一定不会重�
 - instanceof(可以判断number, string, bigint, boolean, 和引用数据类型)，这种方法是通过检查实例对象的原型链是否在构造函数的原型上，但是这个会有一个问题，因为引用数据类型的祖先都是Object，所以引用数据类型 instanceof Object 都是true。
 - constructor 构造器 比较准确但是只能判断引用数据类型
 - object.prototype.toString方法 返回字符串'[object 类型]'
+
+```js
+   function instanceofa(left, right) {
+        if (typeof right !== "function" || left === null) {
+            return false
+        }
+        let rightprototype = right.prototype
+        let leftproto = left.__proto__
+        console.log(left.__proto__)
+        while (true) {
+            if (!leftproto) {
+                return false
+            }
+            if (leftproto === rightprototype) {
+                return true
+            }
+            leftproto = leftproto.__proto__
+        }
+    }
+```
 
 ## Map类型
 
@@ -1056,13 +1095,124 @@ settimeout setinterval
 
 大致是解析IP地址，进行HTTP请求，如果是强制缓存则不在向服务端请求，如果是协商缓存则判断数据是否发生变化，如果没有返回304，从缓存中拿数据，如果发生了变化服务器返回最新数据，数据获取成功后开始渲染页面，同时也会获取图片音频视频，CSS,JS渲染过程就是HTML转成DOM树，CSS转成stylesheet,根据他们两个创建布局树，将布局树分层，为每个图层绘制列表，然后分块，利用光栅化把分块转成位图，最后合成为页面
 
-## 浏览器怎么进行的DOM渲染
+
 
 ## 重绘重排是什么
 
+重绘就是样式发生改变，重绘外观
+
+重排就是有元素位置发生改变要对元素重新排列
+
+- color
+- background-color
+- text-shadow
+- visiable
+
+重排
+
+- 元素高度宽度margin padding发生变化
+- 位置发生变化
+- 获取offsetheight这些的时候
+- display改变
+
 ## 垃圾回收机制
 
+标记清除(Mark-Sweep)
+
+标记清除是JavaScript引擎中进行垃圾回收中使用到最多的算法，在目前主流的浏览器厂商中几乎都是可以看到标记清除算法，只不过不同浏览器厂商优化不同，而且不同的浏览器上运行的性能也有差异。
+ 而此算法主要核心分为两部分标记和清除。
+ 在代码执行阶段，为程序中所有的变量添加上一个二进制字符(二进制运算最快)并初始值置为0(默认全是垃圾)，然后遍历所有的对象，被使用的变量标记置为1，在程序运行结束时回收掉所有标记为零的变量，回收结束之后将现存变量标记统一置为0，等待下一轮回收开启。
+
+新生代就是存放占用内存较少的，存活时间较短的对象，分为使用区跟空闲区，新生代垃圾回收器会对使用区活动对象进行标记，标记完成后把活跃对象复制到空闲区，对活动对象进行活跃排序，然后对使用区进行垃圾回收，将使用区跟空闲区进行身份互换，知道活跃对象清空
+
+老生代就是存放生命周期较长的对象，使用标记清楚发清除
+
+清除定时间，监听DOM，不要过分使用闭包
+
 ## 继承手写
+
+```js
+    // 原型继承 直接new
+    function before(){
+        this.a = [34,44]
+    }
+    before.prototype.b = [3,5,6]
+    let sonbefore = new before()
+    sonbefore.b = [3,4,5]
+    console.log(sonbefore)
+
+    // 构造函数继承
+    function fatherType(){
+        this.age = "43434"
+        this.sayname = () => {
+            console.log(this.age)
+        }
+    }
+    fatherType.prototype.saya = () => {
+        console.log("443")
+    }
+
+    function sonType(){
+        fatherType.call(this)
+        this.name = "黎明"
+    }
+
+    sub1 = new sonType()
+    console.log(sub1)
+
+    // 组合继承 父亲用构造函数继承  祖先元原型继承用原型链  缺点是属性会发生重复的，自身属性跟原型链属性重复
+    
+
+    // 原型式继承
+    function father2type(obj){
+        function f(){}
+        f.prototype = obj
+        return new f()
+    }
+
+    let person = {
+        name : "理想",
+        a:[3,4,5],
+        sayname : function(){
+            console.log(this.name)
+        }
+    }
+    let sub2 = new father2type(person)
+    sub2.a[2] ="232"
+    console.log(sub2)
+    console.log(person.a)
+
+    // 寄生式继承
+    function father3type(){
+        let clone = father2type(person)
+        clone.say = () => {
+            console.log("44")
+        }
+        return clone
+    }
+
+    // 寄生组合式继承
+    // 自己的父亲继承用构造函数继承，父亲的父亲通过寄生式继承
+    function father4type(sontype, fathertype){
+        let prototype = Object.create(fathertype.prototype)
+        prototype.constructor = sontype
+        sontype.prototype = prototype
+    }
+
+    function a(){
+        this.arr = [2,3,4]
+    }
+    a.prototype={b:[4,3,4]}
+
+    function son2(){
+        a.call(this)
+    }
+    father4type(son2, a)
+    let ins = new son2()
+    console.log(a)
+    ins.b =[344]
+    console.log(ins)
+```
 
 ## SEO
 

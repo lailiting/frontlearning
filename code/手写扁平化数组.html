@@ -15,13 +15,13 @@
     function flatten1(arr){
         if(Array.isArray(arr)){
             arr.forEach(item => {
-                result.concat(flatten1(item))
+                flatten1(item)
             })
         }else{
             result.push(arr)
         }
     }
-    // flatten1(arr)
+    flatten1(arr)
     function flatten2(arr){
         return arr.reduce((pre, cur) => {
             return pre.concat(Array.isArray(cur) ? flatten2(cur) : cur)

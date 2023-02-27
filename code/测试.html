@@ -10,11 +10,20 @@
     
 </body>
 <script>
-    let a = 10
-    function foo(){
-        console.log(a)
-        let a =5
-    }
-    foo()
+    // let a = 10
+    // function foo(){
+    //     console.log(a)
+    //     let a =5
+    // }
+    // foo()
+
+    let a = [{a:2,b:3},{a:4}]
+   console.log(
+    a.map(item => {
+     item.a = "#$43"
+     return item
+    })
+   )
+    console.log(a)
 </script>
 </html>

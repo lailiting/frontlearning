@@ -9,4 +9,86 @@
 <body>
     
 </body>
+<script>
+    // 原型继承 直接new
+    function before(){
+        this.a = [34,44]
+    }
+    before.prototype.b = [3,5,6]
+    let sonbefore = new before()
+    sonbefore.b = [3,4,5]
+    console.log(sonbefore)
+
+    // 构造函数继承
+    function fatherType(){
+        this.age = "43434"
+        this.sayname = () => {
+            console.log(this.age)
+        }
+    }
+    fatherType.prototype.saya = () => {
+        console.log("443")
+    }
+
+    function sonType(){
+        fatherType.call(this)
+        this.name = "黎明"
+    }
+
+    sub1 = new sonType()
+    console.log(sub1)
+
+    // 组合继承 父亲用构造函数继承  祖先元原型继承用原型链  缺点是属性会发生重复的，自身属性跟原型链属性重复
+    
+
+    // 原型式继承
+    function father2type(obj){
+        function f(){}
+        f.prototype = obj
+        return new f()
+    }
+
+    let person = {
+        name : "理想",
+        a:[3,4,5],
+        sayname : function(){
+            console.log(this.name)
+        }
+    }
+    let sub2 = new father2type(person)
+    sub2.a[2] ="232"
+    console.log(sub2)
+    console.log(person.a)
+
+    // 寄生式继承
+    function father3type(){
+        let clone = father2type(person)
+        clone.say = () => {
+            console.log("44")
+        }
+        return clone
+    }
+
+    // 寄生组合式继承
+    // 自己的父亲继承用构造函数继承，父亲的父亲通过寄生式继承
+    function father4type(sontype, fathertype){
+        let prototype = Object.create(fathertype.prototype)
+        prototype.constructor = sontype
+        sontype.prototype = prototype
+    }
+
+    function a(){
+        this.arr = [2,3,4]
+    }
+    a.prototype={b:[4,3,4]}
+
+    function son2(){
+        a.call(this)
+    }
+    father4type(son2, a)
+    let ins = new son2()
+    console.log(a)
+    ins.b =[344]
+    console.log(ins)
+</script>
 </html>
