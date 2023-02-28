@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const tasks = [new Promise((resolve, reject) => { setTimeout(() => { resolve("1")},100)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("2")},200)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("3")},300)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("4")},400)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("5")},500)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("6")},600)}),
+    new Promise((resolve, reject) => { setTimeout(() => { reject("7")},700)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("8")},800)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("9")},900)}),
+    new Promise((resolve, reject) => { setTimeout(() => { resolve("10")},1000)}),
+    ]
+    const sendRequest = (tasks, max, callback) => {
+        let index = 0
+        let together = new Array(max).fill(null)
+        const result = []
+        together = together.map(() => {
+            return new Promise((resolve) => {
+        
+                const run = () => {
+                    if(index >= tasks.length){
+                        resolve()
+                        return
+                    }
+                    let cur = index;
+                    let task = tasks[index++]
+                    console.log(together)
+                    console.log(task)
+                    task.then((res) => {
+                        result[cur] = res
+                        run()
+                    }).catch((err) => {
+                        result[cur] = err
+                        run()
+                    })
+                }
+
+                run()
+            })
+        })
+
+        Promise.all(together).then(() => callback(result))
+    }
+
+    sendRequest(tasks, 2, (res) => {
+        console.log(res)
+    })
+</script>
+</html>

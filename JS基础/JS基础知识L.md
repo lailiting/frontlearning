@@ -402,18 +402,34 @@ county.pubsub("旧厂", "500万")
 
 ```js
 
-let dounbe = function(fn,dalay){
-	let time = null
-	return function(){
-		if(time){
-			clearTimeout(time)
-		}
-		time = setTimeout(() => {
-			fn.apply(this, argument)
-			time = null
-		},dalay)
-	}
-}
+  function dounbuce(fn, dalay) {
+        let time = null
+        return function () {
+            console.log(this)
+            if (time) {
+                time = null
+            }
+            time = setTimeout(() => {
+                // console.log(this)
+                // console.log(arguments)
+                fn.apply(this, arguments)
+                time = null
+            }, dalay)
+        }
+    }
+
+    function c() {
+        console.log(this)
+        console.log(arguments)
+        console.log("click")
+    }
+
+    let da = dounbuce(c, 1000)
+    let dom = document.getElementById("button")
+    dom.addEventListener("click", function () {
+        console.log(this)
+        da.call(this, 1)
+    })
 ```
 
 ```js
@@ -771,7 +787,7 @@ JS分为执行栈和任务队列，而任务分为宏任务和微任务，事件
 微任务
 
 - promise.then.catch.finally
-- MutationObserver
+- MutationObserver ([`MutationObserver`](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver) 接口提供了监视对 DOM 树所做更改的能力。)
 - async awiat下面的任务是微任务
 - process.nextTick(Node环境)
 

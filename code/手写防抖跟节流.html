@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="button">34898489334894</div>
+
+    <!-- this是谁 -->
+
+</body>
+<script>
+    function dounbuce(fn, dalay) {
+        let time = null
+        return function () {
+            console.log(this)
+            if (time) {
+                time = null
+            }
+            time = setTimeout(() => {
+                // console.log(this)
+                // console.log(arguments)
+                fn.apply(this, arguments)
+                time = null
+            }, dalay)
+        }
+    }
+
+    function c() {
+        console.log(this)
+        console.log(arguments)
+        console.log("click")
+    }
+
+    let da = dounbuce(c, 1000)
+    let dom = document.getElementById("button")
+    dom.addEventListener("click", function () {
+        console.log(this)
+        da.call(this, 1)
+    })
+</script>
+
+</html>
