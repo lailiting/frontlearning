@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let arr = [1,1,2,2,8,8,2,3,9,3,4,5,6,7,7,7,9,9]
+    console.log(arr.filter((item,i) => arr.indexOf(item) == i))
+    console.log(Array.from(new Set(arr)))
+    let map = new Map()
+    console.log(arr.filter((item) => !map.has(item) && map.set(item,true)))
+    console.log(arr)
+    for(let i = 0; i < arr.length-1; i++){
+        for(let j=i+1; j < arr.length; j++){
+            if(arr[i] === arr[j]){
+                arr.splice(j, 1)
+                j--
+            }
+        }
+    }
+    console.log(arr)
+</script>
+</html>

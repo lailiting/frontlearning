@@ -1126,10 +1126,28 @@ settimeout setinterval
 
 重排
 
-- 元素高度宽度margin padding发生变化
-- 位置发生变化
-- 获取offsetheight这些的时候
-- display改变
+- 添加或删除可见的DOM元素
+- 元素的位置发生变化
+- 元素的尺寸发生变化（包括外边距、内边框、边框大小、高度和宽度等）
+- 内容发生变化，比如文本变化或图片被另一个不同尺寸的图片所替代。
+- 页面一开始渲染的时候（这肯定避免不了）
+- 浏览器的窗口尺寸变化（因为回流是根据视口的大小来计算元素的位置和大小的）
+
+强制重排
+
+offsetTop、offsetLeft、offsetWidth、offsetHeight
+
+scrollTop、scrollLeft、scrollWidth、scrollHeight
+
+clientTop、clientLeft、clientWidth、clientHeight
+
+getComputedStyle()
+
+getBoundingClientRect
+
+进行合并 比如设置cssText 或者直接改变class属性
+
+如果循环在页面中添加新的元素的话，可以让元素逃离文档流，设置display:none， 然后一次添加。
 
 ## 垃圾回收机制
 
@@ -1247,3 +1265,32 @@ HTML5语义化 标题用H1  重点内容em header footer
 img a连接这些写上alt属性 title
 
 性能优化 懒加载 精灵图这些
+
+## 数组去重
+
+利用array.from加set
+
+利用filter加indexof
+
+利用filter加map
+
+两层for循环加array.prototype.splice
+
+```js
+  let arr = [1,1,2,2,8,8,2,3,9,3,4,5,6,7,7,7,9,9]
+    console.log(arr.filter((item,i) => arr.indexOf(item) == i))
+    console.log(Array.from(new Set(arr)))
+    let map = new Map()
+    console.log(arr.filter((item) => !map.has(item) && map.set(item,true)))
+    console.log(arr)
+    for(let i = 0; i < arr.length-1; i++){
+        for(let j=i+1; j < arr.length; j++){
+            if(arr[i] === arr[j]){
+                arr.splice(j, 1)
+                j--
+            }
+        }
+    }
+    console.log(arr)
+```
+

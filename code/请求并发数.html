@@ -35,8 +35,6 @@
                     }
                     let cur = index;
                     let task = tasks[index++]
-                    console.log(together)
-                    console.log(task)
                     task.then((res) => {
                         result[cur] = res
                         run()
