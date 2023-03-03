@@ -421,3 +421,19 @@ opacity属性表示元素的透明度，将元素的透明度设置为0之后，
 ## 重排重绘细节
 
 ## SASS
+
+## CSS实现一个三角形
+
+border画的其实就是一个三角形，transparent设置透明，假设边长为200,高也就是border-bottom设置的像素是边长的2的根号3倍也就是173.2
+
+```css
+   .box{
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-top: 100px solid transparent;
+            border-bottom: 173.2px solid red;
+        }
+```
+
