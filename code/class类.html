@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // class相当于构造函数 里面定义的方法相当于放在了prototype上 new的过程跟原型链继承一样
+    class father {
+        name="爸爸"
+        age=20
+        #wife="妈妈"
+        static sayname(){
+            console.log("刘明")
+        }
+        getname(){
+            console.log(this.name)
+        }
+    }
+    father.sayname()
+    const son = new father()
+    console.log(son.sayname)
+
+    class a extends father {
+        constructor(){
+            super()
+            this.sign=[1,2,3]
+        }
+        sing(){
+            console.log("跳舞")
+        }
+    }
+   let b = new a()
+   b.sign[0] = 2332
+   console.log(b)
+</script>
+</html>

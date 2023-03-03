@@ -57,8 +57,8 @@
     }
     let sub2 = new father2type(person)
     sub2.a[2] ="232"
+    sub2.name="按需"
     console.log(sub2)
-    console.log(person.a)
 
     // 寄生式继承
     function father3type(){
@@ -87,8 +87,9 @@
     }
     father4type(son2, a)
     let ins = new son2()
-    console.log(a)
-    ins.b =[344]
+    ins.arr[1] =787778
     console.log(ins)
+    let test = new a()
+    console.log(test)
 </script>
 </html>
