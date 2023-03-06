@@ -58,9 +58,136 @@
 
 ## proxy和refelct
 
+```js
+   let obj2 = new Proxy(obj, {
+        get(target, key){
+            console.log(`读了${target}为${key}`)
+            return target[key]
+        },
+        set(target, key, newval){
+            console.log(`改了${target}为${newval}`)
+            target[key] = newval
+        }
+    })
+```
+
+
+
 ## promise
 
+```js
+  class Mypromise{
+        static PENDING="pending";
+        static FULFILLED="fulfilled";
+        static REJECTED="rejected";
+        constructor(func){
+            this.promisestate = Mypromise.PENDING
+            this.promiseresult = null
+            func(this.resolve.bind(this), this.reject.bind(this))
+        }
+        resolve(result){
+            if(this.promisestate === Mypromise.PENDING){
+                this.promisestate = Mypromise.FULFILLED
+                this.promiseresult = result
+            }
+        }
+        reject(result){
+            if(this.promisestate === Mypromise.PENDING){
+                this.promisestate = Mypromise.REJECTED
+                this.promiseresult = result
+            }
+        }
+        then(onFulfilled, onRejected){
+            const promise2 = new Mypromise((resolve, reject) => {
+                if(this.promisestate = Mypromise.FULFILLED){
+                    onFulfilled(this.promiseresult)
+                }
+                if(this.promisestate = Mypromise.REJECTED){
+                    onRejected(this.promiseresult)
+                }
+            })
+            return Mypromise
+        }
+    }
+    let myPromise1 = new Mypromise((resolve, reject) => {
+        resolve(3)
+    })
+```
+
+```js
+  // 手写promise.any
+    function myPromiseany(promiseList){
+        return new Promise((resolve,reject) => {
+            if(!Array.isArray(promiseList)){
+                reject(new Error(""))
+            }
+            let count = 0
+            let errorlist = []
+            for(let i = 0; i < promiseList.length; i++){
+                Promise.resolve(promiseList[i]).then(value => {
+                    resolve(value)
+                },err => {
+                    count++
+                    errorlist[i] = err
+                    if(count === promiseList.length){
+                        reject(errorlist)
+                    }
+                })
+            }
+        })
+    }
+```
+
+```js
+    function myPromiseall(promiseList) {
+        return new Promise((resolve, reject) => {
+            if (!Array.isArray(promiseList)) {
+                reject(new Error("输入的不是数组"))
+            }
+            let res = []
+            let count = 0
+            for (let i = 0; i < promiseList.length; i++) {
+                Promise.resolve(promiseList[i]).then(value => {
+                    count++
+                    res[i] = value
+                    if (count === promiseList.length) {
+                        resolve(res)
+                    }
+                }).catch(err => {
+                    reject(err)
+                })
+            }
+        })
+    }
+```
+
+
+
 ## generator
+
+```js
+    function myG(list){
+        let index = 0
+        let len = list.length
+        return {
+            next:function(){
+                let done = index >= len ? true:false
+                let value = !done ? list[index++] : undefined
+                return {
+                    done,
+                    value
+                }
+            }
+        }
+    }
+    let c = myG([1,2,3])
+    console.log(c.next())
+    console.log(c.next())
+    console.log(c.next())
+    console.log(c.next())
+```
+
+
 
 ## async
 

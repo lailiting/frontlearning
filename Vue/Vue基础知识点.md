@@ -166,10 +166,6 @@ Object.defineProperty(obj, prop, descriptor)
 
 Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 数据变化监听 被多次触发，只会被推入到队列中一次。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替。
 
-## $nextick
-
-vue更新DOM是异步的，但是我们要处理一些操作要获取更新后的DOM，比如我们给列表赋值数据之后要 获取到列表项的高度，这个时候就可以用$nextick
-
 ## 动态路由
 
 ## VueReact对比
@@ -239,3 +235,48 @@ input textarea:  v-bind:value v-on : input
 就是有一个认证中心，如果一个公司有很多个系统的话，每个系统都要注册账号密码，很不方便管理，员工每换一个系统都要重新登录，如果修改密码，也要一个一个改，很麻烦，所以就要一个认证中心，当用户登录系统1时，发现用户没有登录跳转到认证中心页，进行用户密码验证，验证通过用户浏览器存下认证中心的cookie,并返回分给系统1令牌，有了令牌后，跳会系统一，用户携带这个令牌进行操作，当用户访问系统二时，发现用户没有登录，跳转到认证中心，通过验证认证中心的cookie,发现用户已经在其他系统登录过，然后生成系统2的令牌，然后把这个令牌发给系统2，用户就可以操作了。
 
 ![image-20230303110250086](https://typora-1312272916.cos.ap-shanghai.myqcloud.com/llt/202303031102063.png)
+
+## hash路由跟history路由
+
+hash路由原理是通过监听window.onhashchange的hash值进行处理的，带有一个#，不太优美，但是可以兼容低版本。
+
+history路由是有一个浏览器历史记录栈的API实现的，通过history.pushstate进行页面跳转，不会触发页面刷新，window.popstate出栈(history.back, history.go())监听浏览器前进跟回退，再做处理，没有#，但是刷新页面时要后端配合，不然会页面丢失。
+
+## $nextick实现与原理
+
+vue更新DOM是异步的，但是我们要处理一些操作要获取更新后的DOM，比如我们给列表赋值数据之后要 获取到列表项的高度，这个时候就可以用$nextick，主要是因为更新DOM是异步的批量更新，$nextick主要是通过宏任务跟微任务来实现的，如果支持promise，通过promise.then微任务实现如果不支持就通过mutationObserver监听节点变化的微任务实现，如果还不支持就用setImedate,最后是settimeout
+
+## 动态路由导航
+
+静态路由导航需要路由拦截，动态路由导航是后端进行拦截
+
+静态路由导航是前端给每种用户设定路由权限列表，这样如果有新增的用户类型，或者用户类型权限发生改变时要改代码。
+
+动态路由就是后端进行配置，前端只需要对后端返回的数据进行处理，把它用菜单渲染处理，然后把路由通过router.addRoute添加到路由让即可，用vuex来存储这个路由列表，刷新时重新获取。
+
+## MVVM
+
+利用object进行数据劫持，任何挂载El,进行数据编译，编译完成利用发布订阅(观察者模式)模式通知订阅者进行视图更新，也就是说，中间的viewmodel把数据更新跟视图操作都给做好了。
+
+## Vue通信方法
+
+- props $emit
+- attrs listeners
+- provied inject  多层嵌套
+- eventbus 事件总线 用来给兄弟节点通信的
+- vuex  全局通信
+
+## vuex原理
+
+给vue实例挂载一个$store，action可以进行数据提前操作，异步处理，最后在mutation改变State
+
+## vue2跟vue3的异同
+
+- 响应式实现不同object.defineproperty    proxy
+- 双向数据绑定  vue有了ref reactive
+- 写法 语法糖不同
+- 生命周期 vue3有了组合式API setup 包括beforecreate跟create
+- 组件传参也有些写法上的不同 vue3的Eventbus改成了mitt，但是原理还是一样的
+- 路由也有点不同
+
+## Mixin混入 与vuex 公共组件的不同

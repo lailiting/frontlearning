@@ -10,15 +10,15 @@
     
 </body>
 <script>
-    var aa = 10
+    // var aa = 10
     // function foo(){
     //     console.log(aa)
     //     var bb =5
     // }
     // foo()
-    console.log(bb)
+    // console.log(bb)
 
-    var bb =1
+    // var bb =1
 
 //     var a = [{a:2,b:3},{a:4}]
 //    console.log(
@@ -28,5 +28,53 @@
 //     })
 //    )
 //     console.log(a)
+
+// const promise = new Promise((resolve, reject) => {
+//     throw new Error("44")
+// })
+// console.log(promise)
+class AO {
+    constructor(){
+        this.arr = [1,2,3]
+    }
+}
+const a = new AO()
+const b = new AO()
+a.arr[1]=344343
+console.log(a)
+console.log(b)
+
+function BO(){
+    this.arr = [1,2,3,4]
+}
+
+BO.prototype.apple = [2,4,5]
+
+const ba = new BO()
+ba.arr[1] = 3492432
+ba.apple.push(200)
+const bb = new BO()
+
+console.log(ba)
+console.log(bb)
+
+class cf{
+    constructor(){
+        this.apple = [2,3,4]
+    }
+}
+
+class sf extends cf{
+    constructor(){
+        super()
+        this.b = [1,2,3]
+    }
+}
+
+let father = new cf()
+father.apple.push(34)
+let son = new sf()
+console.log(father)
+console.log(son)
 </script>
 </html>

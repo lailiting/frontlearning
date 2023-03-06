@@ -16,8 +16,10 @@
     }
     before.prototype.b = [3,5,6]
     let sonbefore = new before()
-    sonbefore.b = [3,4,5]
+    sonbefore.b.push(49)
     console.log(sonbefore)
+
+    // 缺点是对与引用类型的原型链上的属性进行修改会导致变量污染
 
     // 构造函数继承
     function fatherType(){
@@ -29,6 +31,7 @@
     fatherType.prototype.saya = () => {
         console.log("443")
     }
+    fatherType.prototype.apple=[23]
 
     function sonType(){
         fatherType.call(this)
@@ -36,10 +39,31 @@
     }
 
     sub1 = new sonType()
+    // sub1.apple.push(200)
+    subson = new sonType()
     console.log(sub1)
+    console.log(subson)
 
     // 组合继承 父亲用构造函数继承  祖先元原型继承用原型链  缺点是属性会发生重复的，自身属性跟原型链属性重复
-    
+    function combfather (){
+        this.b = [2,3,4]
+        this.say =function(){
+            console.log(this.b)
+        }
+    }
+    combfather.prototype.apple = [2,3,4,5]
+    function combson(){
+        combfather.call(this)
+        this.name = "34"
+    }
+
+    combson.prototype = new combfather()
+    combfather.prototype.constructor = combson
+    let coma = new combson()
+    let comb = new combson()
+    coma.apple.push(200)
+    console.log(coma)
+    console.log(coma)
 
     // 原型式继承
     function father2type(obj){
@@ -88,8 +112,9 @@
     father4type(son2, a)
     let ins = new son2()
     ins.arr[1] =787778
+    ins.b.push("3443")
     console.log(ins)
-    let test = new a()
+    let test = new son2()
     console.log(test)
 </script>
 </html>
