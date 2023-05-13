@@ -581,22 +581,27 @@ Function.prototype.Mybind = (context, ...arg1){
 
 ```js
 // 检测数据类型的功能函数
-   function clone(target, map = new Map()) {
-            console.log(map)
-            if (typeof target === 'object') {
-                let cloneTarget = Array.isArray(target) ? [] : {};
-                if (map.get(target)) {
-                    return map.get(target);
-                }
-                map.set(target, cloneTarget);
-                for (const key in target) {
-                    cloneTarget[key] = clone(target[key], map);
-                }
-                return cloneTarget;
-            } else {
-                return target;
-            }
-        };
+// 检测数据类型的功能函数
+function clone(target, map = new Map()) {
+  if (typeof target === 'object') {
+    let cloneTarget = Array.isArray(target) ? [] : {}
+    if (map.get(target)) {
+      return map.get(target)
+    }
+    map.set(target, cloneTarget)
+    for (const key in target) {
+      // 这个写法兼容了值为null的情况 因为typeof null === 'object'
+      if (!target[key]) {
+        cloneTarget[key] = target[key]
+      } else {
+        cloneTarget[key] = typeof target[key] === 'object' ? clone(target[key], map) : target[key]
+      }
+    }
+    return cloneTarget
+  } else {
+    return target
+  }
+}
 ```
 
 ## 视口高度
